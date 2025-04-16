@@ -11,8 +11,8 @@ export default function NewsLetter() {
               Subscribe to our newsletter
             </h2>
             <p className="mt-4 text-lg text-gray-300">
-              Nostrud amet eu ullamco nisi aute in ad minim nostrud adipisicing
-              velit quis. Duis tempor incididunt dolore.
+              Get the latest updates on crypto trends, new gift card listings,
+              and exclusive platform features straight to your inbox.
             </p>
             <div className="mt-6 flex max-w-md gap-x-4">
               <label htmlFor="email-address" className="sr-only">
@@ -44,11 +44,11 @@ export default function NewsLetter() {
                 />
               </div>
               <dt className="mt-4 text-base font-semibold text-white">
-                Weekly articles
+                🗓 Market insights
               </dt>
               <dd className="mt-2 text-base/7 text-gray-400">
-                Non laboris consequat cupidatat laborum magna. Eiusmod non irure
-                cupidatat duis commodo amet.
+                Weekly breakdowns on crypto market moves and trading tips from
+                experts.
               </dd>
             </div>
             <div className="flex flex-col items-start">
@@ -62,8 +62,7 @@ export default function NewsLetter() {
                 No spam
               </dt>
               <dd className="mt-2 text-base/7 text-gray-400">
-                Officia excepteur ullamco ut sint duis proident non adipisicing.
-                Voluptate incididunt anim.
+                We only send you useful updates — no fluff, no nonsense.
               </dd>
             </div>
           </dl>

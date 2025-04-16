@@ -8,7 +8,6 @@ import {
   ChevronsRight,
   ChevronDown,
   ChevronUp,
-  Eye,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -21,108 +20,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Trx } from "@/actions/user";
 
-// Sample transaction data
-const sampleTransactions = [
-  {
-    id: "1",
-    type: "Payment",
-    date: "2023-04-01",
-    reference: "INV-001",
-    amount: "$250.00",
-    status: "Completed",
-  },
-  {
-    id: "2",
-    type: "Refund",
-    date: "2023-04-02",
-    reference: "REF-001",
-    amount: "$50.00",
-    status: "Completed",
-  },
-  {
-    id: "3",
-    type: "Payment",
-    date: "2023-04-03",
-    reference: "INV-002",
-    amount: "$120.00",
-    status: "Pending",
-  },
-  {
-    id: "4",
-    type: "Subscription",
-    date: "2023-04-04",
-    reference: "SUB-001",
-    amount: "$15.99",
-    status: "Completed",
-  },
-  {
-    id: "5",
-    type: "Payment",
-    date: "2023-04-05",
-    reference: "INV-003",
-    amount: "$75.50",
-    status: "Failed",
-  },
-  {
-    id: "6",
-    type: "Refund",
-    date: "2023-04-06",
-    reference: "REF-002",
-    amount: "$25.00",
-    status: "Pending",
-  },
-  {
-    id: "7",
-    type: "Subscription",
-    date: "2023-04-07",
-    reference: "SUB-002",
-    amount: "$9.99",
-    status: "Completed",
-  },
-  {
-    id: "8",
-    type: "Payment",
-    date: "2023-04-08",
-    reference: "INV-004",
-    amount: "$199.99",
-    status: "Completed",
-  },
-  {
-    id: "9",
-    type: "Payment",
-    date: "2023-04-09",
-    reference: "INV-005",
-    amount: "$45.00",
-    status: "Failed",
-  },
-  {
-    id: "10",
-    type: "Subscription",
-    date: "2023-04-10",
-    reference: "SUB-003",
-    amount: "$29.99",
-    status: "Completed",
-  },
-  {
-    id: "11",
-    type: "Payment",
-    date: "2023-04-11",
-    reference: "INV-006",
-    amount: "$150.00",
-    status: "Pending",
-  },
-  {
-    id: "12",
-    type: "Refund",
-    date: "2023-04-12",
-    reference: "REF-003",
-    amount: "$75.00",
-    status: "Completed",
-  },
-];
 
-export default function TransactionTable() {
+
+export default function TransactionTable({ data }: { data: Trx[] }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [sortField, setSortField] = useState("date");
@@ -131,12 +33,12 @@ export default function TransactionTable() {
 
   // Sort transactions
   const sortedTransactions = [
-    ...(showEmptyState ? [] : sampleTransactions),
+    ...(showEmptyState ? [] : data),
   ].sort((a, b) => {
     if (sortField === "date") {
       return sortDirection === "asc"
-        ? new Date(a.date).getTime() - new Date(b.date).getTime()
-        : new Date(b.date).getTime() - new Date(a.date).getTime();
+        ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     } else if (sortField === "status") {
       return sortDirection === "asc"
         ? a.status.localeCompare(b.status)
@@ -176,14 +78,14 @@ export default function TransactionTable() {
   // Get status badge variant
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "Completed":
-        return "success";
-      case "Pending":
-        return "warning";
-      case "Failed":
-        return "destructive";
+      case "success":
+        return "bg-green-400";
+      case "pending":
+        return "bg-orange-400";
+      case "failed":
+        return "bg-red-400";
       default:
-        return "secondary";
+        return "bg-slate-400";
     }
   };
 
@@ -225,7 +127,6 @@ export default function TransactionTable() {
                       ))}
                   </div>
                 </TableHead>
-                <TableHead>Details</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -234,22 +135,16 @@ export default function TransactionTable() {
                   <TableRow key={transaction.id}>
                     <TableCell>{transaction.type}</TableCell>
                     <TableCell>
-                      {new Date(transaction.date).toLocaleDateString()}
+                      {new Date(transaction.createdAt).toLocaleDateString()}
                     </TableCell>
-                    <TableCell>{transaction.reference}</TableCell>
-                    <TableCell>{transaction.amount}</TableCell>
+                    <TableCell>{transaction.id}</TableCell>
+                    <TableCell>₦{transaction.amount}</TableCell>
                     <TableCell>
-                      <Badge
-                        variant={getStatusBadge(transaction.status) as any}
+                      <div 
+                        className={`p-1 ${getStatusBadge(transaction.status)} rounded-md text-sm w-fit text-white`}
                       >
                         {transaction.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="ghost" size="icon">
-                        <Eye className="h-4 w-4" />
-                        <span className="sr-only">View details</span>
-                      </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))

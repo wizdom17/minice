@@ -64,7 +64,7 @@ const TrendingGiftCard = () => {
           Popular Gift Cards
         </h1>
         <p className="text-xl mt-4 font-medium text-slate-600 font-sans max-w-2xl">
-          Prestmit has a catalogue of over 1,000 gift cards. But below are some
+          MiniceX has a catalogue of over 1,000 gift cards. But below are some
           of the popular ones.
         </p>
       </div>

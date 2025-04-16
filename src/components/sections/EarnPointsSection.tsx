@@ -1,8 +1,6 @@
 import React from "react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowBigRightDash, MoveRightIcon } from "lucide-react";
+import { MoveRightIcon } from "lucide-react";
 import { MdArrowOutward } from "react-icons/md";
 
 const EarnPointsSection = () => {

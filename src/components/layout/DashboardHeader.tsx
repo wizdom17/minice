@@ -28,6 +28,9 @@ import {
 } from "lucide-react";
 import { TbGiftCard } from "react-icons/tb";
 import { usePathname } from "next/navigation";
+import { UserData } from "@/actions/user";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const navigationItems = [
   { name: "Home", href: "/dashboard", icon: Home },
@@ -47,38 +50,53 @@ const navigationItems = [
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
   { name: "Help & Support", href: "/dashboard/support", icon: HelpCircle },
 ];
-const DashboardHeader = () => {
+const DashboardHeader = ({ user }: { user: UserData }) => {
   const pathname = usePathname();
+  const handleLogout = async () => {
+    try {
+      const res = await axios.post("/api/auth/logout");
+      if (res.status === 200) {
+        window.location.href = "/";
+      }
+      return res;
+    } catch (error) {
+      console.log(error);
+      toast.error("Logout failed");
+    }
+  };
+  const [openSidebar, setOpenSidebar] = React.useState(false);
 
   return (
     <div className="md:px-10 px-5 py-8 border-b border-muted">
       <div className="flex items-center justify-between">
         <p className="font-sans text-lg lg:block hidden">
-          <span className="text-2xl font-semibold ">Hello</span> wisdom4life, 👋🏼
+          <span className="text-2xl font-semibold ">Hello</span>{" "}
+          {user.firstname}, 👋🏼
         </p>
-        <Sheet>
-          <SheetTrigger>
-            <RiMenuUnfoldLine
-              size={30}
-              className="lg:hidden text-colorSecondary block"
-            />
-          </SheetTrigger>
-          <SheetContent side="left" className="w-[250px]">
+        <RiMenuUnfoldLine
+          onClick={() => setOpenSidebar(true)}
+          size={30}
+          className="text-colorSecondary block lg:hidden cursor-pointer"
+        />
+        <Sheet open={openSidebar} onOpenChange={setOpenSidebar}>
+          <SheetContent side="left" className="w-[250px] lg:hidden">
             <SheetHeader className="bg-primary-bg p-7">
               <div className="flex items-center gap-x-3">
                 <div className="p-1 bg-white rounded-full">
                   <Image
-                    src="/images/user-photo.svg"
+                    src="/images/user.png"
                     alt="user"
                     height={37}
                     width={37}
                     className="object-contain rounded-full"
                   />
                 </div>
-                <p className="font-sans font-semibold text-blue-500">Wisdom4life</p>
+                <p className="font-sans font-semibold text-blue-500">
+                  {user.firstname}
+                </p>
               </div>
             </SheetHeader>
-            <div className="lg:hidden flex flex-col px-4 pb-10 lg:pb-0 overflow-y-auto bg-gray-50 border-r border-gray-100">
+            <div className=" flex flex-col px-4 pb-10 lg:pb-0 overflow-y-auto bg-gray-50 border-r border-gray-100">
               {/* Navigation Menu */}
               <nav className="mt-3">
                 <ul className="space-y-3">
@@ -87,6 +105,7 @@ const DashboardHeader = () => {
                     return (
                       <li key={item.name}>
                         <Link
+                          onClick={() => setOpenSidebar(false)}
                           href={item.href}
                           className={`flex items-center p-3 rounded-md text-gray-900  ${
                             isActive
@@ -186,7 +205,10 @@ const DashboardHeader = () => {
                   <User size={18} />
                   <p className="text-sm">Profile</p>
                 </Link>
-                <div className="flex items-center gap-x-3 px-3 py-3 cursor-pointer">
+                <div
+                  onClick={handleLogout}
+                  className="flex items-center gap-x-3 px-3 py-3 cursor-pointer"
+                >
                   <LogOut size={18} />
                   <p className="text-sm">Logout</p>
                 </div>

@@ -26,7 +26,7 @@ export const fetchUser = async () => {
     const userDoc = await getDoc(doc(db, "users", decoded?.userId as string));
 
     if (userDoc.exists()) {
-      const userData = userDoc.data() as User;
+      const userData = userDoc.data() as UserData;
       return { user: userData };
     } else {
       return { error: "User not found" };
@@ -72,15 +72,18 @@ export const fetchTransactions = async () => {
 export type Trx = {
   id: string;
   amount: number;
-  status: "pending" | "processing" | "success" | "declined";
-  type: "withdrawal" | "deposit" ;
-  paymentMethod: string;
+  status: "completed" | "proccessing" | "success" | "declined";
+  type: "withdrawal" | "deposit";
   userId: string;
+  userEmail: string;
   createdAt: number;
   updatedAt: number;
+  bankName?: string;
+  accountName?: string;
+  accountNumber?: string;
 };
 
-export type User = {
+export type UserData = {
   balance: number;
   createdAt: number;
   email: string;
@@ -91,10 +94,14 @@ export type User = {
   phone: string;
   id: string;
   status: "active" | "banned";
-  role: string;
+  role: "user";
   lastname: string;
   referral_code: string;
   total_deposit: number;
   total_withdrawal: number;
+  bank_account: {
+    account_number: string;
+    account_name: string;
+    bank_name: string;
+  }[];
 };
-

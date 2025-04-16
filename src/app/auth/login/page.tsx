@@ -14,7 +14,7 @@ const Page = () => {
           <Link href="/" className="flex-shrink-0">
             <div className="w-40 h-8 relative">
               <Image
-                src="/images/logo-prest.svg"
+                src="/app-logo.png"
                 alt="Minicex"
                 fill
                 className="object-contain"

@@ -21,6 +21,10 @@ export async function POST(req: NextRequest) {
           name: crypto.name,
           symbol: crypto.symbol,
           rate: crypto.rate,
+          address: crypto.address.map((item) => ({
+            address: item.address,
+            chain: item.chain,
+          })),
         })
       )
     );

@@ -1,10 +1,12 @@
 import { fetchGiftcards } from "@/actions/giftcards";
+import { fetchUser } from "@/actions/user";
 import Giftcards from "@/components/dashboard/Giftcards";
-import { Gift, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import React from "react";
 
 const Page = async () => {
   const { giftcards } = await fetchGiftcards();
+  const { user } = await fetchUser();
   return (
     <div className="text-colorSecondary">
       <div className="flex lg:flex-row flex-col lg:items-center gap-y-4 lg:justify-between">
@@ -18,7 +20,7 @@ const Page = async () => {
           />
         </div>
       </div>
-      {giftcards && <Giftcards giftcards={giftcards} />}
+      {giftcards && user && <Giftcards user={user} giftcards={giftcards} />}
     </div>
   );
 };

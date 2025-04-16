@@ -8,7 +8,7 @@ export const fetchCrypto = async () => {
     const crypto: Crypto[] = [];
     const querySnapshot = await getDocs(query(collection(db, "crypto")));
     querySnapshot.forEach((doc) => {
-        crypto.push(doc.data() as Crypto);
+      crypto.push(doc.data() as Crypto);
     });
     return { crypto };
   } catch (error: any) {
@@ -21,4 +21,10 @@ export type Crypto = {
   name: string;
   symbol: string;
   rate: string;
+  address: [
+    {
+      address: string;
+      chain: string;
+    }
+  ];
 };

@@ -93,8 +93,8 @@ export default function ContactPage() {
                 <Mail className="h-6 w-6 text-white" />
               </div>
               <h2 className="text-xl font-bold mb-1">Mail Us</h2>
-              <p className="text-gray-600">help@prestmit.io (Support)</p>
-              <p className="text-gray-600">partners@prestmit.io (Others)</p>
+              <p className="text-gray-600">help@minicex.io (Support)</p>
+              <p className="text-gray-600">partners@minicex.io (Others)</p>
             </CardContent>
           </Card>
 

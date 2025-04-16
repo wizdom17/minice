@@ -2,7 +2,7 @@ import BlogSection from "@/components/sections/BlogSection";
 import NewsLetter from "@/components/sections/NewsLetter";
 import React from "react";
 
-const page = () => {
+const Page = () => {
   return (
     <div>
       <BlogSection />
@@ -11,4 +11,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

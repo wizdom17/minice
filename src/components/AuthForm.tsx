@@ -47,7 +47,7 @@ export const LoginForm = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("/api/login", {
+      const res = await axios.post("/api/auth/login", {
         email,
         password,
       });
@@ -206,7 +206,7 @@ export const RegisterForm = () => {
       schema.parse(formData);
       setErrors({}); // Clear any previous errors
       setLoading(true);
-      const res = await axios.post("/api/register", {
+      const res = await axios.post("/api/auth/register", {
         ...formData,
       });
       if (res.status === 200) {
@@ -376,7 +376,7 @@ export function AdminLoginPage() {
   };
 
   return (
-    <Card className="w-full max-w-md bg-secondary-foreground border border-muted-300 text-light mx-auto mt-32">
+    <Card className="w-full max-w-md  border border-muted-300 text-light mx-auto mt-32">
       <div className="flex items-center justify-center mx-auto mt-7 mb-4">
         <Link className="" href={"/"}>
           <Image

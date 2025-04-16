@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { GiftCard } from "@/actions/giftcards";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
-import { Upload, Check, X } from "lucide-react";
+import { LoaderCircle, Upload, X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -16,12 +16,15 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { UserData } from "@/actions/user";
+import toast from "react-hot-toast";
 
 // Zod Schema
 const formSchema = z.object({
   cardForm: z.string().optional(),
+  currency: z.string(),
   country: z.string().min(1, "Select a country"),
-  amount: z
+  value: z
     .string()
     .min(1, "Amount is required")
     .refine((val) => !isNaN(Number(val)), {
@@ -32,7 +35,13 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-const Giftcards = ({ giftcards }: { giftcards: GiftCard[] }) => {
+const Giftcards = ({
+  giftcards,
+  user,
+}: {
+  giftcards: GiftCard[];
+  user: UserData;
+}) => {
   const [selectedGiftcard, setSelectedGiftcard] = useState<GiftCard | null>(
     null
   );
@@ -41,6 +50,7 @@ const Giftcards = ({ giftcards }: { giftcards: GiftCard[] }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [rate, setRate] = useState<number>(0); // State for rate
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     reset,
     register,
@@ -53,7 +63,8 @@ const Giftcards = ({ giftcards }: { giftcards: GiftCard[] }) => {
     defaultValues: {
       cardForm: "",
       country: "",
-      amount: "",
+      currency: "",
+      value: "",
       comment: "",
     },
     mode: "onChange",
@@ -61,8 +72,41 @@ const Giftcards = ({ giftcards }: { giftcards: GiftCard[] }) => {
 
   const isFormValid = isValid && files.length > 0;
 
-  const onSubmit = (data: FormData) => {
-    console.log("Form submitted with:", data, files);
+  const onSubmit = async (data: FormData) => {
+    setIsSubmitting(true);
+    const formData = new FormData();
+    // Append form fields to FormData
+    formData.append("cardForm", data.cardForm || "");
+    formData.append("country", data.country || "");
+    formData.append("currency", data.currency || "");
+    formData.append("value", data.value || "");
+    formData.append("comment", data.comment || "");
+    formData.append("amount", (rate * Number(data.value)).toString() || ""); // Append the total amount
+    formData.append("rate", rate.toString() || ""); // Append the rate
+    formData.append("name", selectedGiftcard?.name || ""); // Append the gift card name
+    formData.append("userId", user.id); // Append the user ID
+    formData.append("userEmail", user.email); // Append the user email
+
+    // Append files to FormData
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    try {
+      const response = await fetch("/api/trade-giftcard", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.status === 200) {
+        setOpenModal(false);
+        toast.success("giftcard details submitted");
+      }
+    } catch (error) {
+      setIsSubmitting(false);
+      toast.error("error submitting giftcard");
+      console.error("Error submitting form:", error);
+    }
   };
 
   const handleCardClick = (card: GiftCard) => {
@@ -111,7 +155,7 @@ const Giftcards = ({ giftcards }: { giftcards: GiftCard[] }) => {
           onClick={() => handleCardClick(card)}
           className="flex cursor-pointer items-center justify-center flex-col gap-y-2"
         >
-          <img src={card.img} alt={card.name} className="w-full h-auto" />
+          <img src={card.img} alt={card.name} className="w-full rounded-2xl h-[150px]" />
           <p className="text-center text-sm font-semibold">{card.name}</p>
         </div>
       ))}
@@ -153,6 +197,12 @@ const Giftcards = ({ giftcards }: { giftcards: GiftCard[] }) => {
                 onValueChange={(val) => {
                   setSelectedCountry(val);
                   setValue("country", val);
+                  setValue(
+                    "currency",
+                    selectedGiftcard?.countries.find(
+                      (c) => c.name === selectedCountry
+                    )?.currency || ""
+                  );
                 }}
                 defaultValue="euro"
               >
@@ -176,16 +226,16 @@ const Giftcards = ({ giftcards }: { giftcards: GiftCard[] }) => {
 
             <div>
               <Label className="block text-slate-500 mb-2">
-                Total Gift Card Amount
+                Total Gift Card Value
               </Label>
               <Input
-                {...register("amount")}
+                {...register("value")}
                 type="text"
                 className="w-full h-14 border-slate-200"
               />
-              {errors.amount && (
+              {errors.value && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.amount.message}
+                  {errors.value.message}
                 </p>
               )}
             </div>
@@ -207,7 +257,7 @@ const Giftcards = ({ giftcards }: { giftcards: GiftCard[] }) => {
               </div>
               <div className="flex items-center justify-between py-1">
                 <p>Total</p>
-                <p>₦{rate * Number(watch("amount"))}</p>
+                <p>₦{rate * Number(watch("value"))}</p>
               </div>
             </div>
 
@@ -216,7 +266,7 @@ const Giftcards = ({ giftcards }: { giftcards: GiftCard[] }) => {
               id="file-upload"
               type="file"
               multiple
-              accept=".png"
+              accept="image/*"
               className="hidden"
               onChange={handleFileChange}
             />
@@ -261,13 +311,23 @@ const Giftcards = ({ giftcards }: { giftcards: GiftCard[] }) => {
             )}
 
             <div className="mt-8">
-              <Button
-                type="submit"
-                className="w-full cursor-pointer bg-blue-500 hover:bg-blue-500 h-12"
-                disabled={!isFormValid}
-              >
-                Submit
-              </Button>
+              {isSubmitting ? (
+                <Button
+                  type="submit"
+                  className="w-full cursor-pointer bg-blue-500 hover:bg-blue-500 h-12"
+                  disabled
+                >
+                  <LoaderCircle className="animate-spin" />
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  className="w-full cursor-pointer bg-blue-500 hover:bg-blue-500 h-12"
+                  disabled={!isFormValid}
+                >
+                  Submit
+                </Button>
+              )}
             </div>
           </form>
         </SheetContent>

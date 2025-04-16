@@ -40,6 +40,13 @@ export async function POST(req: NextRequest) {
         referral_code: `${uid}`,
         status: "active",
         role: "user",
+        bank_account: [
+          {
+            account_number: "",
+            account_name: "",
+            bank_name: "",
+          },
+        ],
       });
 
       await createSession({ uid: uid });
@@ -76,7 +83,7 @@ export async function POST(req: NextRequest) {
 
     await setDoc(doc(db, "users", user.uid), {
       createdAt: Date.now(),
-      id: uid,
+      id: user.uid,
       firstname: firstName,
       lastname: lastName,
       email: email,
@@ -90,6 +97,13 @@ export async function POST(req: NextRequest) {
       referral_code: `${uid}`,
       status: "active",
       role: "user",
+      bank_account: [
+        {
+          account_number: "",
+          account_name: "",
+          bank_name: "",
+        },
+      ],
     });
     await createSession({ uid: user.uid });
     // await resend.emails.send({

@@ -14,7 +14,7 @@ const HeroSection = () => {
               Sell, Trade & Exchange Gift Cards For Naira
             </h1>
             <p className="text-gray-600 text-xl text-center max-w-xl">
-              Sell gift cards from any brand and get instant cash with Prestmit,
+              Sell gift cards from any brand and get instant cash with MiniceX,
               Nigeria's premier gift card trading platform.
             </p>
             <div className="flex items-center justify-center gap-4">

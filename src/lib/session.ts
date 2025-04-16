@@ -5,11 +5,11 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
 // Encrypt the userId in the JWT token using jose
-export async function encrypt(user: { uid: string; isAdmin?: boolean }) {
+export async function encrypt(user: { uid: string; role?: "admin" }) {
   const secretKey = new TextEncoder().encode(
     process.env.NEXT_PUBLIC_JWT_SECRET
   );
-  const token = await new SignJWT({ userId: user.uid, isAdmin: user.isAdmin })
+  const token = await new SignJWT({ userId: user.uid, role: user.role })
     .setProtectedHeader({ alg: "HS256" }) // Set the algorithm to HS256
     .setExpirationTime("1h") // Set expiration to 1 hour
     .sign(secretKey);
@@ -46,7 +46,7 @@ export async function createSession(user: { uid: string }) {
 
 export async function createAdminSession(user: {
   uid: string;
-  isAdmin: boolean;
+  role: "admin";
 }) {
   const token = await encrypt(user);
   const expires = new Date(Date.now() + 1 * 60 * 60 * 1000); // 1 hour expiration

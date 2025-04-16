@@ -7,7 +7,7 @@ export function HeroVideo() {
         className="block"
         animationStyle="top-in-bottom-out"
         videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
-        thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
+        thumbnailSrc="/images/dashboard.jpg"
         thumbnailAlt="Hero Video"
       />
     </div>

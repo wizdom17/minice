@@ -8,7 +8,7 @@ const HowToSection = () => {
     {
       number: "01",
       title: "Create Account",
-      description: "Register a Prestmit account in less than a minute.",
+      description: "Register a MiniceX account in less than a minute.",
     },
     {
       number: "02",
@@ -34,7 +34,7 @@ const HowToSection = () => {
           How to Sell Gift Cards for Nigerian Naira
         </h2>
         <p className="text-center text-gray-600 text-lg font-medium font-sans mt-5 mb-12 max-w-3xl mx-auto">
-          To sell gift cards on Prestmit: Create an account and select the sell
+          To sell gift cards on MiniceX: Create an account and select the sell
           gift card option on the dashboard. We accept up to 50 different gift
           card types, and you can be paid in Naira and other currencies.
         </p>
