@@ -1,6 +1,7 @@
 import { fetchTransactions } from "@/actions/admin";
 import WithdrawalsTable from "@/components/admin/Withdrawals";
 import React from "react";
+export const dynamic = "force-dynamic";
 
 const Page = async () => {
   const { transactions } = await fetchTransactions();

@@ -2,6 +2,7 @@ import { fetchTransactions, fetchUser } from "@/actions/user";
 import Wallet from "@/components/dashboard/Wallet";
 import TransactionTable from "@/components/dashboard/WalletTransactionTable";
 import React from "react";
+export const dynamic = "force-dynamic";
 
 const Page = async () => {
   const { transactions } = await fetchTransactions();

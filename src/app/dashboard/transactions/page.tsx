@@ -1,6 +1,7 @@
 import { fetchTransactions } from "@/actions/user";
 import TransactionTable from "@/components/dashboard/Transactions";
 import React from "react";
+export const dynamic = "force-dynamic";
 
 const Page = async () => {
   const {transactions} = await fetchTransactions();
