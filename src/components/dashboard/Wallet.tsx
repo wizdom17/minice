@@ -67,7 +67,7 @@ const Wallet = ({ user }: { user: UserData }) => {
           <span className="md:text-lg text-sm font-medium">Withdraw</span>
         </Button>
         <Button
-          onClick={()=>router.push("/dasboard/bank-accounts")}
+          onClick={()=>router.push("/dashboard/bank-accounts")}
           variant="outline"
           className="flex items-center cursor-pointer justify-center gap-2 py-6 bg-gray-50 hover:bg-gray-100 border-gray-100 rounded-xl"
         >
